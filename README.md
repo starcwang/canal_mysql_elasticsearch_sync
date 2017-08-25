@@ -1,0 +1,1 @@
+# canal_mysql_elasticsearch_sync
