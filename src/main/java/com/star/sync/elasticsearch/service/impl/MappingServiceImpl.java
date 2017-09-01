@@ -2,6 +2,7 @@ package com.star.sync.elasticsearch.service.impl;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Maps;
 import com.star.sync.elasticsearch.model.DatabaseTableModel;
 import com.star.sync.elasticsearch.model.IndexTypeModel;
 import com.star.sync.elasticsearch.service.MappingService;
@@ -11,7 +12,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 
 /**
  * @author <a href="mailto:wangchao.star@gmail.com">wangchao</a>
@@ -22,10 +27,22 @@ import java.util.Map;
 @PropertySource("classpath:mapping.properties")
 @ConfigurationProperties
 public class MappingServiceImpl implements MappingService, InitializingBean {
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    //    @Value("${dbEsMapping}")
     private Map<String, String> dbEsMapping;
     private BiMap<DatabaseTableModel, IndexTypeModel> dbEsBiMapping;
+    private Map<String, String> tablePrimaryKeyMap;
+    private Map<String, Converter> mysqlTypeElasticsearchTypeMapping;
+
+    @Override
+    public Map<String, String> getTablePrimaryKeyMap() {
+        return tablePrimaryKeyMap;
+    }
+
+    @Override
+    public void setTablePrimaryKeyMap(Map<String, String> tablePrimaryKeyMap) {
+        this.tablePrimaryKeyMap = tablePrimaryKeyMap;
+    }
 
     @Override
     public IndexTypeModel getIndexType(DatabaseTableModel databaseTableModel) {
@@ -38,6 +55,12 @@ public class MappingServiceImpl implements MappingService, InitializingBean {
     }
 
     @Override
+    public Object getElasticsearchTypeObject(String mysqlType, String data) {
+        Optional<Entry<String, Converter>> result = mysqlTypeElasticsearchTypeMapping.entrySet().parallelStream().filter(entry -> mysqlType.toLowerCase().contains(entry.getKey())).findFirst();
+        return (result.isPresent() ? result.get().getValue() : (Converter) data1 -> data1).convert(data);
+    }
+
+    @Override
     public void afterPropertiesSet() throws Exception {
         dbEsBiMapping = HashBiMap.create();
         dbEsMapping.forEach((key, value) -> {
@@ -45,6 +68,17 @@ public class MappingServiceImpl implements MappingService, InitializingBean {
             String[] valueStrings = StringUtils.split(value, ".");
             dbEsBiMapping.put(new DatabaseTableModel(keyStrings[0], keyStrings[1]), new IndexTypeModel(valueStrings[0], valueStrings[1]));
         });
+
+        mysqlTypeElasticsearchTypeMapping = Maps.newHashMap();
+        mysqlTypeElasticsearchTypeMapping.put("char", data -> data);
+        mysqlTypeElasticsearchTypeMapping.put("text", data -> data);
+        mysqlTypeElasticsearchTypeMapping.put("blob", data -> data);
+        mysqlTypeElasticsearchTypeMapping.put("int", Long::valueOf);
+        mysqlTypeElasticsearchTypeMapping.put("date", data -> LocalDateTime.parse(data, formatter));
+        mysqlTypeElasticsearchTypeMapping.put("time", data -> LocalDateTime.parse(data, formatter));
+        mysqlTypeElasticsearchTypeMapping.put("float", Double::valueOf);
+        mysqlTypeElasticsearchTypeMapping.put("double", Double::valueOf);
+        mysqlTypeElasticsearchTypeMapping.put("decimal", Double::valueOf);
     }
 
     public Map<String, String> getDbEsMapping() {
@@ -53,5 +87,9 @@ public class MappingServiceImpl implements MappingService, InitializingBean {
 
     public void setDbEsMapping(Map<String, String> dbEsMapping) {
         this.dbEsMapping = dbEsMapping;
+    }
+
+    private interface Converter {
+        Object convert(String data);
     }
 }

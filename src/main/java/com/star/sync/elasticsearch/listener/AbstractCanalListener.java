@@ -9,7 +9,6 @@ import com.star.sync.elasticsearch.event.CanalEvent;
 import com.star.sync.elasticsearch.model.DatabaseTableModel;
 import com.star.sync.elasticsearch.model.IndexTypeModel;
 import com.star.sync.elasticsearch.service.MappingService;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -57,11 +56,7 @@ public abstract class AbstractCanalListener<EVENT extends CanalEvent> implements
             if (column == null) {
                 return;
             }
-            if (column.getMysqlType().toLowerCase().contains("int")) {
-                jsonMap.put(column.getName(), StringUtils.isBlank(column.getValue()) ? null : Long.valueOf(column.getValue()));
-            } else {
-                jsonMap.put(column.getName(), column.getIsNull() ? null : column.getValue());
-            }
+            jsonMap.put(column.getName(), column.getIsNull() ? null : mappingService.getElasticsearchTypeObject(column.getMysqlType(), column.getValue()));
         });
         return jsonMap;
     }

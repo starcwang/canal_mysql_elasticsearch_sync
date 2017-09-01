@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
@@ -20,7 +19,6 @@ import java.net.InetAddress;
  * @since 2017-08-25 17:32:00
  */
 @Component
-@PropertySource("classpath:server.properties")
 public class ElasticsearchClient implements DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(ElasticsearchClient.class);
     private TransportClient transportClient;

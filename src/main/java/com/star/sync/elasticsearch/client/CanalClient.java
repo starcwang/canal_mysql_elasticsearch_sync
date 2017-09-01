@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
@@ -19,7 +18,6 @@ import java.net.InetSocketAddress;
  * @since 2017-08-25 17:26:00
  */
 @Component
-@PropertySource("classpath:server.properties")
 public class CanalClient implements DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(CanalClient.class);
     private CanalConnector canalConnector;
