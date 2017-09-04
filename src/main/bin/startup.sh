@@ -88,7 +88,7 @@ then
 	echo LOG CONFIGURATION : $logback_configurationFile
 	echo sync conf : $sync_conf
 	echo CLASSPATH :$CLASSPATH
-	$JAVA $JAVA_OPTS $JAVA_DEBUG_OPT $CANAL_OPTS -classpath .:$CLASSPATH -jar $MAIN_JAR 1>>$base/logs/sync/info.log 2>&1 &
+	$JAVA $JAVA_OPTS $JAVA_DEBUG_OPT $CANAL_OPTS -classpath .:$CLASSPATH -jar $MAIN_JAR 1>>$base/logs/info.log 2>&1 &
 	echo $! > $base/bin/sync.pid
 	
 	echo "cd to $current_path for continue"

@@ -26,6 +26,11 @@ public class SyncController {
     @Resource
     private SyncService syncService;
 
+    /**
+     * 通过库名和表名全量同步数据
+     *
+     * @param request 请求参数
+     */
     @RequestMapping("/byTable")
     @ResponseBody
     public String syncTable(@Validated SyncByTableRequest request) {
