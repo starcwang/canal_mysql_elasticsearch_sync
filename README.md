@@ -22,8 +22,8 @@ canal是阿里巴巴mysql数据库binlog的增量订阅&消费组件。[canal传
 ## 默认相关字段映射
 <table  class="bbcode"> 
 <tr>  
-<td>Mysql字段类型</td>
-<td>Elasticsearch类型</td>
+<td>**Mysql字段类型**</td>
+<td>**Elasticsearch类型**</td>
 </tr>
 <tr>  
 <td>*char*</td>
