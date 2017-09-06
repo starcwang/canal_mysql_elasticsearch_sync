@@ -5,7 +5,7 @@ canal是阿里巴巴mysql数据库binlog的增量订阅&消费组件。[canal传
 
 ## 工作原理
 ### 全量
-暴露Http接口（接口定义），待调用后开启后台进程，通过主键分批同步指定数据库中数据到Elasticsearch
+暴露Http接口（接口定义见[wiki](https://github.com/starcwang/canal_mysql_elasticsearch_sync/wiki/HttpApi)），待调用后开启后台进程，通过主键分批同步指定数据库中数据到Elasticsearch
 > 读取数据库会加**读锁**   
 > 主键必须为数字类型
 #### 过程
