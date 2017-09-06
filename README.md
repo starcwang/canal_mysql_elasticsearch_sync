@@ -19,7 +19,7 @@ canal是阿里巴巴mysql数据库binlog的增量订阅&消费组件。[canal传
 循环监听canal通过binlog同步过来的event事件，区别增删改进行与之对应的Elasticsearch的操作。
 > 目前只解析了 insert、update、delete，其它数据库操作会被忽略
 
-## 相关映射
+## 默认相关字段映射
 <table  class="bbcode"> 
 <tr>  
 <td>Mysql字段类型</td>
@@ -27,46 +27,57 @@ canal是阿里巴巴mysql数据库binlog的增量订阅&消费组件。[canal传
 </tr>
 <tr>  
 <td>*char*</td>
-<td>{
-                "type": "text",
-                "fields": {
-                  "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                  }
-                }
-</td>
+<td>{"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}</td>
 </tr>
 <tr>  
-<td>table</td>
-<td>是</td>
+<td>*text*</td>
+<td>{"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}</td>
 </tr>
 <tr>  
-<td>stepSize</td>
-<td>否</td>
+<td>*blob*</td>
+<td>{"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}</td>
 </tr>
 <tr>  
-<td>stepSize</td>
-<td>否</td>
+<td>*int*</td>
+<td>{"type": "long"}</td>
 </tr>
 <tr>  
-<td>stepSize</td>
-<td>否</td>
+<td>*date*</td>
+<td>{"type": "date"}</td>
 </tr>
 <tr>  
-<td>stepSize</td>
-<td>否</td>
+<td>*time*</td>
+<td>{"type": "date"}</td>
 </tr>
 <tr>  
-<td>stepSize</td>
-<td>否</td>
+<td>*float*</td>
+<td>{"type": "float"}</td>
+</tr>
+<tr>  
+<td>*double*</td>
+<td>{"type": "float"}</td>
+</tr>
+<tr>  
+<td>*decimal*</td>
+<td>{"type": "float"}</td>
+</tr>
+<tr>  
+<td>其它</td>
+<td>{"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}</td>
 </tr>
 </table> 
+
+## 注意事项
+- Mysql的binlog格式必须为ROW
+- Elasticsearch支持的版本为**5.x**
+- 增量同步只监听了 **INSERT、UPDATE、DELETE**，其它如建表、删表等尚未支持。
+- 建议Elasticsearch的mapping手动来创建，因为默认的创建方式不能保证满足业务需求
 
 ## 相关文档
 - [wiki](https://github.com/starcwang/canal_mysql_elasticsearch_sync/wiki)
 - [QuickStart](https://github.com/starcwang/canal_mysql_elasticsearch_sync/wiki/QuickStart)
 
 ## 联系方式
+能力有限，如果有不合理的地方，还请不吝赐教。
 - QQ：760823254
 - 邮件：wangchao.star@gmail.com
