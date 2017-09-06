@@ -13,7 +13,7 @@ canal是阿里巴巴mysql数据库binlog的增量订阅&消费组件。[canal传
 2. 设*pk*=1；
 2. 加读锁🔐，从数据库中取出*pk* —— *pk*+*stepSize* 大小的数据（默认500）的数据；
 3. 插入到Elasticsearch中；
-4. 释放读锁🔐，pk累加*stepSize*，循环2.操作
+4. 释放读锁🔐，pk累加*stepSize*，循环3.操作
 
 ### 增量
 循环监听canal通过binlog同步过来的event事件，区别增删改进行与之对应的Elasticsearch的操作。
