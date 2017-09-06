@@ -68,9 +68,9 @@ canal是阿里巴巴mysql数据库binlog的增量订阅&消费组件。[canal传
 </table> 
 
 ## 注意事项
-- Mysql的binlog格式必须为ROW
+- Mysql的binlog格式必须为**ROW**
 - Elasticsearch支持的版本为**5.x**
-- 增量同步只监听了 **INSERT、UPDATE、DELETE**，其它如建表、删表等尚未支持。
+- 增量同步只监听了 **INSERT、UPDATE、DELETE**，其它如建表、删表等尚未支持
 - 建议Elasticsearch的mapping手动来创建，因为默认的创建方式不能保证满足业务需求
 
 ## 相关文档
