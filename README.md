@@ -75,6 +75,7 @@ canal是阿里巴巴mysql数据库binlog的增量订阅&消费组件。[canal传
 
 ## 相关文档
 - [wiki](https://github.com/starcwang/canal_mysql_elasticsearch_sync/wiki)
+- [HttpApi](https://github.com/starcwang/canal_mysql_elasticsearch_sync/wiki/HttpApi)
 - [QuickStart](https://github.com/starcwang/canal_mysql_elasticsearch_sync/wiki/QuickStart)
 
 ## 联系方式
