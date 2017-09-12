@@ -51,7 +51,7 @@ public class SyncServiceImpl implements SyncService {
                 long maxPK = baseDao.selectMaxPK(primaryKey, request.getDatabase(), request.getTable());
                 for (long i = 1; i < maxPK; i += request.getStepSize()) {
                     batchInsertElasticsearch(request, primaryKey, i, i + request.getStepSize(), indexTypeModel);
-                    logger.info("当前同步pk=%s，总共total=%s，进度=%s", i, maxPK, (double) (i / maxPK * 100) + "%");
+                    logger.info(String.format("当前同步pk=%s，总共total=%s，进度=%s", i, maxPK, (double) (i / maxPK * 100) + "%"));
                 }
             } catch (Exception e) {
                 logger.error("批量转换并插入Elasticsearch异常", e);
