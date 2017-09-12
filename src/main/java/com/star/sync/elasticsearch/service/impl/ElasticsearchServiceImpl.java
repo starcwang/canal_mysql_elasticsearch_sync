@@ -3,6 +3,7 @@ package com.star.sync.elasticsearch.service.impl;
 import com.star.sync.elasticsearch.service.ElasticsearchService;
 import com.star.sync.elasticsearch.util.JsonUtil;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,10 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
 
         idDataMap.forEach((id, dataMap) -> bulkRequestBuilder.add(transportClient.prepareIndex(index, type, id).setSource(dataMap)));
         try {
-            bulkRequestBuilder.execute().get();
+            BulkResponse bulkResponse = bulkRequestBuilder.execute().get();
+            if (bulkResponse.hasFailures()) {
+                logger.error("elasticsearch批量插入错误, index=" + index + ", type=" + type + ", data=" + JsonUtil.toJson(idDataMap) + ", cause:" + bulkResponse.buildFailureMessage());
+            }
         } catch (Exception e) {
             logger.error("elasticsearch批量插入错误, index=" + index + ", type=" + type + ", data=" + JsonUtil.toJson(idDataMap), e);
         }
