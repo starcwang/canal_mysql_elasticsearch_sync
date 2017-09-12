@@ -44,7 +44,7 @@
             ${key}
         FROM
             ${databaseName}.${tableName}
-        GROUP BY ${key} DESC
+        ORDER BY ${key} DESC
         LIMIT 1
     </select>
 
