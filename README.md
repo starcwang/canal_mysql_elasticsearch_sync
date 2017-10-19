@@ -26,39 +26,39 @@ canal是阿里巴巴mysql数据库binlog的增量订阅&消费组件。[canal传
 <td>Elasticsearch类型</td>
 </tr>
 <tr>  
-<td>*char*</td>
+<td>char</td>
 <td>{"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}</td>
 </tr>
 <tr>  
-<td>*text*</td>
+<td>text</td>
 <td>{"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}</td>
 </tr>
 <tr>  
-<td>*blob*</td>
+<td>blob</td>
 <td>{"type": "text", "fields": {"keyword": {"type": "keyword", "ignore_above": 256}}</td>
 </tr>
 <tr>  
-<td>*int*</td>
+<td>int</td>
 <td>{"type": "long"}</td>
 </tr>
 <tr>  
-<td>*date*</td>
+<td>date</td>
 <td>{"type": "date"}</td>
 </tr>
 <tr>  
-<td>*time*</td>
+<td>time</td>
 <td>{"type": "date"}</td>
 </tr>
 <tr>  
-<td>*float*</td>
+<td>float</td>
 <td>{"type": "float"}</td>
 </tr>
 <tr>  
-<td>*double*</td>
+<td>double</td>
 <td>{"type": "float"}</td>
 </tr>
 <tr>  
-<td>*decimal*</td>
+<td>decimal</td>
 <td>{"type": "float"}</td>
 </tr>
 <tr>  
