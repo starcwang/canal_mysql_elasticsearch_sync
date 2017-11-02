@@ -52,7 +52,7 @@ public class CommonTest {
                 }
             });
         }
-        Thread.sleep(1000000000);
+        Thread.sleep(10000);
         executorService.shutdown();
     }
 }
