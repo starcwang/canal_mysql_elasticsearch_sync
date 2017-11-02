@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -51,7 +52,7 @@ public class SyncServiceImpl implements SyncService {
                 long maxPK = baseDao.selectMaxPK(primaryKey, request.getDatabase(), request.getTable());
                 for (long i = 1; i < maxPK; i += request.getStepSize()) {
                     batchInsertElasticsearch(request, primaryKey, i, i + request.getStepSize(), indexTypeModel);
-                    logger.info(String.format("当前同步pk=%s，总共total=%s，进度=%s", i, maxPK, (double) (i / maxPK * 100) + "%"));
+                    logger.info(String.format("当前同步pk=%s，总共total=%s，进度=%s%", i, maxPK, new BigDecimal(i).divide(new BigDecimal(maxPK * 100), 2, BigDecimal.ROUND_HALF_UP)));
                 }
             } catch (Exception e) {
                 logger.error("批量转换并插入Elasticsearch异常", e);
