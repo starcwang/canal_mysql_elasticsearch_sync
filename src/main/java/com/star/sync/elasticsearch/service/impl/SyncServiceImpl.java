@@ -9,6 +9,8 @@ import com.star.sync.elasticsearch.service.MappingService;
 import com.star.sync.elasticsearch.service.SyncService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,11 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -28,8 +35,12 @@ import java.util.stream.Collectors;
  * @since 2017-08-31 17:48:00
  */
 @Service
-public class SyncServiceImpl implements SyncService {
+public class SyncServiceImpl implements SyncService, InitializingBean, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(SyncServiceImpl.class);
+    /**
+     * 使用线程池控制并发数量
+     */
+    private ExecutorService cachedThreadPool;
 
     @Resource
     private BaseDao baseDao;
@@ -47,7 +58,8 @@ public class SyncServiceImpl implements SyncService {
         if (indexTypeModel == null) {
             throw new IllegalArgumentException(String.format("配置文件中缺失database=%s和table=%s所对应的index和type的映射配置", request.getDatabase(), request.getTable()));
         }
-        new Thread(() -> {
+
+        cachedThreadPool.submit(() -> {
             try {
                 long maxPK = baseDao.selectMaxPK(primaryKey, request.getDatabase(), request.getTable());
                 for (long i = 1; i < maxPK; i += request.getStepSize()) {
@@ -57,11 +69,11 @@ public class SyncServiceImpl implements SyncService {
             } catch (Exception e) {
                 logger.error("批量转换并插入Elasticsearch异常", e);
             }
-        }).start();
+        });
         return true;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     @Override
     public void batchInsertElasticsearch(SyncByTableRequest request, String primaryKey, long from, long to, IndexTypeModel indexTypeModel) {
         List<Map<String, Object>> dataList = baseDao.selectByPKIntervalLockInShareMode(primaryKey, from, to, request.getDatabase(), request.getTable());
@@ -77,5 +89,17 @@ public class SyncServiceImpl implements SyncService {
             }
         }));
         return source;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        cachedThreadPool = new ThreadPoolExecutor(10, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), (ThreadFactory) Thread::new);
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        if (cachedThreadPool != null) {
+            cachedThreadPool.shutdown();
+        }
     }
 }
