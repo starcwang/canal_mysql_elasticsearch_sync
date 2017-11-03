@@ -22,9 +22,12 @@ public class CommonTest {
     @Test
     public void testCommon() throws Exception {
         System.out.println(DateTime.parse("2017-09-01 16:21:17", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate());
-        long i = 7989501;
+//        long i = 7989501;
         long maxPK = 9025632;
-        System.out.println(String.format("当前同步pk=%s，总共total=%s，进度=%s%%", i, maxPK, new BigDecimal(i).divide(new BigDecimal(maxPK * 100), 2, BigDecimal.ROUND_HALF_DOWN)));
+
+        for (long j = 0; j < 9025632; j++) {
+            System.out.println(String.format("当前同步pk=%s，总共total=%s，进度=%s%%", j, maxPK, new BigDecimal(j * 100).divide(new BigDecimal(maxPK), 2, BigDecimal.ROUND_HALF_UP)));
+        }
     }
 
     @Test
