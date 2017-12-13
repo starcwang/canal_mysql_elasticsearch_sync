@@ -39,12 +39,22 @@
         FROM
             ${databaseName}.${tableName}
     </select>
+
     <select id="selectMaxPK" resultType="java.lang.Long">
         SELECT
             ${key}
         FROM
             ${databaseName}.${tableName}
         ORDER BY ${key} DESC
+        LIMIT 1
+    </select>
+
+    <select id="selectMinPK" resultType="java.lang.Long">
+        SELECT
+        ${key}
+        FROM
+        ${databaseName}.${tableName}
+        ORDER BY ${key}
         LIMIT 1
     </select>
 

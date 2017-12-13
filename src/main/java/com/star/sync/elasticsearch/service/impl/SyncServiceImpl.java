@@ -59,10 +59,11 @@ public class SyncServiceImpl implements SyncService, InitializingBean, Disposabl
             throw new IllegalArgumentException(String.format("配置文件中缺失database=%s和table=%s所对应的index和type的映射配置", request.getDatabase(), request.getTable()));
         }
 
+        long minPK = Optional.ofNullable(request.getFrom()).orElse(baseDao.selectMinPK(primaryKey, request.getDatabase(), request.getTable()));
+        long maxPK = Optional.ofNullable(request.getFrom()).orElse(baseDao.selectMaxPK(primaryKey, request.getDatabase(), request.getTable()));
         cachedThreadPool.submit(() -> {
             try {
-                long maxPK = baseDao.selectMaxPK(primaryKey, request.getDatabase(), request.getTable());
-                for (long i = 1; i < maxPK; i += request.getStepSize()) {
+                for (long i = minPK; i < maxPK; i += request.getStepSize()) {
                     batchInsertElasticsearch(request, primaryKey, i, i + request.getStepSize(), indexTypeModel);
                     logger.info(String.format("当前同步pk=%s，总共total=%s，进度=%s%%", i, maxPK, new BigDecimal(i * 100).divide(new BigDecimal(maxPK), 3, BigDecimal.ROUND_HALF_UP)));
                 }
@@ -96,7 +97,7 @@ public class SyncServiceImpl implements SyncService, InitializingBean, Disposabl
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        cachedThreadPool = new ThreadPoolExecutor(10, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), (ThreadFactory) Thread::new);
+        cachedThreadPool = new ThreadPoolExecutor(5, 5, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(), (ThreadFactory) Thread::new);
     }
 
     @Override
