@@ -77,6 +77,9 @@ public class SyncServiceImpl implements SyncService, InitializingBean, Disposabl
     @Override
     public void batchInsertElasticsearch(SyncByTableRequest request, String primaryKey, long from, long to, IndexTypeModel indexTypeModel) {
         List<Map<String, Object>> dataList = baseDao.selectByPKIntervalLockInShareMode(primaryKey, from, to, request.getDatabase(), request.getTable());
+        if (dataList == null || dataList.isEmpty()) {
+            return;
+        }
         dataList = convertDateType(dataList);
         Map<String, Map<String, Object>> dataMap = dataList.parallelStream().collect(Collectors.toMap(strObjMap -> String.valueOf(strObjMap.get(primaryKey)), map -> map));
         elasticsearchService.batchInsertById(indexTypeModel.getIndex(), indexTypeModel.getType(), dataMap);
