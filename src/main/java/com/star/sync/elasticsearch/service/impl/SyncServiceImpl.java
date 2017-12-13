@@ -60,7 +60,7 @@ public class SyncServiceImpl implements SyncService, InitializingBean, Disposabl
         }
 
         long minPK = Optional.ofNullable(request.getFrom()).orElse(baseDao.selectMinPK(primaryKey, request.getDatabase(), request.getTable()));
-        long maxPK = Optional.ofNullable(request.getFrom()).orElse(baseDao.selectMaxPK(primaryKey, request.getDatabase(), request.getTable()));
+        long maxPK = Optional.ofNullable(request.getTo()).orElse(baseDao.selectMaxPK(primaryKey, request.getDatabase(), request.getTable()));
         cachedThreadPool.submit(() -> {
             try {
                 for (long i = minPK; i < maxPK; i += request.getStepSize()) {
