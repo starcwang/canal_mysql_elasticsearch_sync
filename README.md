@@ -1,7 +1,4 @@
-# 支持请 star ✨✨✨✨✨✨✨✨✨✨✨✨✨
-
-# canal_mysql_elasticsearch_sync
-
+# canal_mysql_elasticsearch_sync 支持请star✨
 基于 *canal* 的 *Mysql* 与 *Elasticsearch* 实时同步的 *javaweb* 服务。    
 canal是阿里巴巴mysql数据库binlog的增量订阅&消费组件。[canal传送门](https://github.com/alibaba/canal)
 
