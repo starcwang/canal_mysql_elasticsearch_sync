@@ -4,30 +4,23 @@ import com.star.sync.elasticsearch.dao.BaseDao;
 import com.star.sync.elasticsearch.model.DatabaseTableModel;
 import com.star.sync.elasticsearch.model.IndexTypeModel;
 import com.star.sync.elasticsearch.model.request.SyncByTableRequest;
-import com.star.sync.elasticsearch.service.ElasticsearchService;
 import com.star.sync.elasticsearch.service.MappingService;
 import com.star.sync.elasticsearch.service.SyncService;
+import com.star.sync.elasticsearch.service.TransactionalService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:wangchao.star@gmail.com">wangchao</a>
@@ -46,10 +39,10 @@ public class SyncServiceImpl implements SyncService, InitializingBean, Disposabl
     private BaseDao baseDao;
 
     @Resource
-    private ElasticsearchService elasticsearchService;
+    private MappingService mappingService;
 
     @Resource
-    private MappingService mappingService;
+    private TransactionalService transactionalService;
 
     @Override
     public boolean syncByTable(SyncByTableRequest request) {
@@ -64,7 +57,7 @@ public class SyncServiceImpl implements SyncService, InitializingBean, Disposabl
         cachedThreadPool.submit(() -> {
             try {
                 for (long i = minPK; i < maxPK; i += request.getStepSize()) {
-                    batchInsertElasticsearch(request, primaryKey, i, i + request.getStepSize(), indexTypeModel);
+                    transactionalService.batchInsertElasticsearch(request, primaryKey, i, i + request.getStepSize(), indexTypeModel);
                     logger.info(String.format("当前同步pk=%s，总共total=%s，进度=%s%%", i, maxPK, new BigDecimal(i * 100).divide(new BigDecimal(maxPK), 3, BigDecimal.ROUND_HALF_UP)));
                 }
             } catch (Exception e) {
@@ -72,27 +65,6 @@ public class SyncServiceImpl implements SyncService, InitializingBean, Disposabl
             }
         });
         return true;
-    }
-
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
-    @Override
-    public void batchInsertElasticsearch(SyncByTableRequest request, String primaryKey, long from, long to, IndexTypeModel indexTypeModel) {
-        List<Map<String, Object>> dataList = baseDao.selectByPKIntervalLockInShareMode(primaryKey, from, to, request.getDatabase(), request.getTable());
-        if (dataList == null || dataList.isEmpty()) {
-            return;
-        }
-        dataList = convertDateType(dataList);
-        Map<String, Map<String, Object>> dataMap = dataList.parallelStream().collect(Collectors.toMap(strObjMap -> String.valueOf(strObjMap.get(primaryKey)), map -> map));
-        elasticsearchService.batchInsertById(indexTypeModel.getIndex(), indexTypeModel.getType(), dataMap);
-    }
-
-    private List<Map<String, Object>> convertDateType(List<Map<String, Object>> source) {
-        source.parallelStream().forEach(map -> map.forEach((key, value) -> {
-            if (value instanceof Timestamp) {
-                map.put(key, LocalDateTime.ofInstant(((Timestamp) value).toInstant(), ZoneId.systemDefault()));
-            }
-        }));
-        return source;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.star.sync.elasticsearch.service;
 
-import com.star.sync.elasticsearch.model.IndexTypeModel;
 import com.star.sync.elasticsearch.model.request.SyncByTableRequest;
 
 /**
@@ -16,9 +15,4 @@ public interface SyncService {
      * @return 后台同步进程执行成功与否
      */
     boolean syncByTable(SyncByTableRequest request);
-
-    /**
-     * 开启事务的读取mysql并插入到Elasticsearch中（读锁）
-     */
-    void batchInsertElasticsearch(SyncByTableRequest request, String primaryKey, long from, long to, IndexTypeModel indexTypeModel);
 }
