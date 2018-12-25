@@ -1,5 +1,7 @@
 # canal_mysql_elasticsearch_sync 支持请star✨
 
+canal于1.1.2版本后，已支持自动同步到Elasticsearch。赞canal！[canal传送门](https://github.com/alibaba/canal)
+
 基于 *canal* 的 *Mysql* 与 *Elasticsearch* 实时同步的 *javaweb* 服务。      
 canal是阿里巴巴mysql数据库binlog的增量订阅&消费组件。[canal传送门](https://github.com/alibaba/canal)
 
