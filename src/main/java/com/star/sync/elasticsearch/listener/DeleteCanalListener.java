@@ -2,7 +2,7 @@ package com.star.sync.elasticsearch.listener;
 
 import com.alibaba.otter.canal.protocol.CanalEntry.Column;
 import com.alibaba.otter.canal.protocol.CanalEntry.RowData;
-import com.star.sync.elasticsearch.event.DeleteCanalEvent;
+import com.star.sync.elasticsearch.event.DeleteAbstractCanalEvent;
 import com.star.sync.elasticsearch.service.ElasticsearchService;
 import com.star.sync.elasticsearch.service.MappingService;
 import org.apache.commons.lang.StringUtils;
@@ -20,7 +20,7 @@ import java.util.Optional;
  * @since 2017-08-26 22:33:00
  */
 @Component
-public class DeleteCanalListener extends AbstractCanalListener<DeleteCanalEvent> {
+public class DeleteCanalListener extends AbstractCanalListener<DeleteAbstractCanalEvent> {
     private static final Logger logger = LoggerFactory.getLogger(DeleteCanalListener.class);
 
     @Resource

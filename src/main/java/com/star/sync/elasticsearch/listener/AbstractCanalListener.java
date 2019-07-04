@@ -5,7 +5,7 @@ import com.alibaba.otter.canal.protocol.CanalEntry.Entry;
 import com.alibaba.otter.canal.protocol.CanalEntry.RowChange;
 import com.alibaba.otter.canal.protocol.CanalEntry.RowData;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.star.sync.elasticsearch.event.CanalEvent;
+import com.star.sync.elasticsearch.event.AbstractCanalEvent;
 import com.star.sync.elasticsearch.model.DatabaseTableModel;
 import com.star.sync.elasticsearch.model.IndexTypeModel;
 import com.star.sync.elasticsearch.service.MappingService;
@@ -23,7 +23,7 @@ import java.util.Map;
  * @version 1.0
  * @since 2017-08-28 14:40:00
  */
-public abstract class AbstractCanalListener<EVENT extends CanalEvent> implements ApplicationListener<EVENT> {
+public abstract class AbstractCanalListener<EVENT extends AbstractCanalEvent> implements ApplicationListener<EVENT> {
     private static final Logger logger = LoggerFactory.getLogger(AbstractCanalListener.class);
 
     @Resource

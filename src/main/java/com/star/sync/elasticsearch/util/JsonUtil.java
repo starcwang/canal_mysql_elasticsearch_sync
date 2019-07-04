@@ -20,19 +20,19 @@ import java.util.List;
  * @version 1.0
  * @since 2017-08-26 22:54:00
  */
-public abstract class JsonUtil {
+public class JsonUtil {
     private static final Logger logger = LoggerFactory.getLogger(JsonUtil.class);
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     /**
      * 对象映射
      */
-    private static final ObjectMapper objMapper = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     static {
-        objMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        objMapper.setDateFormat(new SimpleDateFormat(DATE_FORMAT));
-        objMapper.setSerializationInclusion(Include.NON_NULL);
+        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        OBJECT_MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        OBJECT_MAPPER.setDateFormat(new SimpleDateFormat(DATE_FORMAT));
+        OBJECT_MAPPER.setSerializationInclusion(Include.NON_NULL);
     }
 
 
@@ -48,7 +48,7 @@ public abstract class JsonUtil {
             return (String) obj;
         }
         try {
-            rst = objMapper.writeValueAsString(obj);
+            rst = OBJECT_MAPPER.writeValueAsString(obj);
         } catch (Exception e) {
             logger.error("将Java对象转换成Json串出错！");
             throw new RuntimeException("将Java对象转换成Json串出错！", e);
@@ -66,7 +66,7 @@ public abstract class JsonUtil {
     public static <T> T fromJson(String json, Class<T> type) {
         T rst;
         try {
-            rst = objMapper.readValue(json, type);
+            rst = OBJECT_MAPPER.readValue(json, type);
         } catch (Exception e) {
             logger.error("Json串转换成对象出错：{}", json);
             throw new RuntimeException("Json串转换成对象出错!", e);
@@ -87,7 +87,7 @@ public abstract class JsonUtil {
     public static <T> T fromJson(String json, TypeReference<T> typeRef) {
         T rst;
         try {
-            rst = objMapper.readValue(json, typeRef);
+            rst = OBJECT_MAPPER.readValue(json, typeRef);
         } catch (Exception e) {
             logger.error("Json串转换成对象出错：{}", json);
             throw new RuntimeException("Json串转换成对象出错!", e);
@@ -99,7 +99,7 @@ public abstract class JsonUtil {
     public static HashMap<String, Object> fromJsonToMap(String json) {
         HashMap<String, Object> map = new HashMap<String, Object>();
         try {
-            map = objMapper.readValue(json, map.getClass());
+            map = OBJECT_MAPPER.readValue(json, map.getClass());
         } catch (IOException e) {
             logger.error("Json串转换成对象出错：{}", json);
         }
@@ -110,7 +110,7 @@ public abstract class JsonUtil {
     public static HashMap<String, Object> toMap(String json) {
         HashMap<String, Object> map;
         try {
-            map = objMapper.readValue(json, HashMap.class);
+            map = OBJECT_MAPPER.readValue(json, HashMap.class);
         } catch (Exception e) {
             map = null;
             logger.error("Json串转换成对象出错：{}", json);
@@ -122,7 +122,7 @@ public abstract class JsonUtil {
     public static List<HashMap<String, Object>> fromJsonToList(String json) {
         List<HashMap<String, Object>> list;
         try {
-            list = objMapper.readValue(json, List.class);
+            list = OBJECT_MAPPER.readValue(json, List.class);
         } catch (IOException e) {
             logger.error("Json串转换成对象出错：{}", json);
             throw new RuntimeException("Json串转换成List出错!", e);

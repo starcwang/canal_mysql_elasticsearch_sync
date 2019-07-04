@@ -5,9 +5,9 @@ import com.alibaba.otter.canal.protocol.CanalEntry.Entry;
 import com.alibaba.otter.canal.protocol.CanalEntry.EntryType;
 import com.alibaba.otter.canal.protocol.CanalEntry.EventType;
 import com.alibaba.otter.canal.protocol.Message;
-import com.star.sync.elasticsearch.event.DeleteCanalEvent;
-import com.star.sync.elasticsearch.event.InsertCanalEvent;
-import com.star.sync.elasticsearch.event.UpdateCanalEvent;
+import com.star.sync.elasticsearch.event.DeleteAbstractCanalEvent;
+import com.star.sync.elasticsearch.event.InsertAbstractCanalEvent;
+import com.star.sync.elasticsearch.event.UpdateAbstractCanalEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -64,13 +64,13 @@ public class CanalScheduling implements Runnable, ApplicationContextAware {
         EventType eventType = entry.getHeader().getEventType();
         switch (eventType) {
             case INSERT:
-                applicationContext.publishEvent(new InsertCanalEvent(entry));
+                applicationContext.publishEvent(new InsertAbstractCanalEvent(entry));
                 break;
             case UPDATE:
-                applicationContext.publishEvent(new UpdateCanalEvent(entry));
+                applicationContext.publishEvent(new UpdateAbstractCanalEvent(entry));
                 break;
             case DELETE:
-                applicationContext.publishEvent(new DeleteCanalEvent(entry));
+                applicationContext.publishEvent(new DeleteAbstractCanalEvent(entry));
                 break;
             default:
                 break;

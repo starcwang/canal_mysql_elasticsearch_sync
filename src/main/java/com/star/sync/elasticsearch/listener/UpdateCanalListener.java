@@ -2,7 +2,7 @@ package com.star.sync.elasticsearch.listener;
 
 import com.alibaba.otter.canal.protocol.CanalEntry.Column;
 import com.alibaba.otter.canal.protocol.CanalEntry.RowData;
-import com.star.sync.elasticsearch.event.UpdateCanalEvent;
+import com.star.sync.elasticsearch.event.UpdateAbstractCanalEvent;
 import com.star.sync.elasticsearch.service.ElasticsearchService;
 import com.star.sync.elasticsearch.service.MappingService;
 import org.apache.commons.lang.StringUtils;
@@ -21,7 +21,7 @@ import java.util.Optional;
  * @since 2017-08-26 22:32:00
  */
 @Component
-public class UpdateCanalListener extends AbstractCanalListener<UpdateCanalEvent> {
+public class UpdateCanalListener extends AbstractCanalListener<UpdateAbstractCanalEvent> {
     private static final Logger logger = LoggerFactory.getLogger(UpdateCanalListener.class);
 
     @Resource
