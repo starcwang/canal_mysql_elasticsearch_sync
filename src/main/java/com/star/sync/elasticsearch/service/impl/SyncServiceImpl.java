@@ -56,7 +56,7 @@ public class SyncServiceImpl implements SyncService, InitializingBean, Disposabl
         long maxPK = Optional.ofNullable(request.getTo()).orElse(baseDao.selectMaxPK(primaryKey, request.getDatabase(), request.getTable()));
         cachedThreadPool.submit(() -> {
             try {
-                for (long i = minPK; i <= maxPK; i += request.getStepSize()) {
+                for (long i = minPK; i <= maxPK + request.getStepSize(); i += request.getStepSize()) {
                     transactionalService.batchInsertElasticsearch(request, primaryKey, i, i + request.getStepSize(), indexTypeModel);
                     logger.info(String.format("当前同步pk=%s，总共total=%s，进度=%s%%", i, maxPK, new BigDecimal(i * 100).divide(new BigDecimal(maxPK), 3, BigDecimal.ROUND_HALF_UP)));
                 }
