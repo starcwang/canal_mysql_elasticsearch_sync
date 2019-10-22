@@ -86,6 +86,6 @@ canal是阿里巴巴mysql数据库binlog的增量订阅&消费组件。
 ## 联系方式
 如果有不合理的地方，还请不吝赐教。
 - QQ：760823254
-- 邮件：wangchao.star@gmail.com   
+- 邮件：760823254@qq.com   
  
 **支持记得star✨**
