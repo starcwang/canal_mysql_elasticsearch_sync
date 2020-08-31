@@ -1,4 +1,5 @@
 # canal_mysql_elasticsearch_sync 支持请star✨
+# 交流Q群：733688083
 
 **canal于v1.1.2版本后，已支持自动同步到Elasticsearch。赞canal！[canal传送门](https://github.com/alibaba/canal)**
 
@@ -85,7 +86,6 @@ canal是阿里巴巴mysql数据库binlog的增量订阅&消费组件。
 
 ## 联系方式
 如果有不合理的地方，还请不吝赐教。
-- QQ：760823254
-- 邮件：760823254@qq.com   
+- QQ群：733688083 
  
 **支持记得star✨**
