@@ -19,7 +19,7 @@
     </parent>
 
     <properties>
-        <org.elasticsearch.version>5.1.1</org.elasticsearch.version>
+        <org.elasticsearch.version>6.8.17</org.elasticsearch.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
